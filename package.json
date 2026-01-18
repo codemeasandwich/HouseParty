@@ -1,0 +1,37 @@
+{
+  "name": "claude-persona",
+  "version": "1.0.0",
+  "description": "Persona management system for Claude Code - extend VSCode support personas",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "node scripts/postinstall.js && npm run hooks:install",
+    "uninstall": "node scripts/uninstall.js",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "hooks:install": "cp .hooks/pre-commit .git/hooks/ && cp -r .hooks/pre-commit.d .git/hooks/ && chmod +x .git/hooks/pre-commit .git/hooks/pre-commit.d/*.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codemeasandwich/claude-persona.git"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "persona",
+    "ai",
+    "vscode",
+    "anthropic"
+  ],
+  "author": "bri",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codemeasandwich/claude-persona/issues"
+  },
+  "homepage": "https://github.com/codemeasandwich/claude-persona#readme",
+  "devDependencies": {
+    "bun-types": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

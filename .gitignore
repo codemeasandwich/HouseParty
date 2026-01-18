@@ -1,0 +1,5 @@
+node_modules/
+vscode-extension/node_modules/
+vscode-extension/out/
+*.vsix
+.DS_Store

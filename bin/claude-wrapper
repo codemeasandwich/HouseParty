@@ -1,0 +1,57 @@
+#!/bin/bash
+set -euo pipefail
+
+STATE_FILE="${HOME}/.claude/persona-state.json"
+SKILLS_DIR="${HOME}/.claude/skills"
+
+# Get working directory (passed by VSCode or use pwd)
+WORK_DIR="${CLAUDE_WORKING_DIR:-$(pwd)}"
+
+# Default persona
+PERSONA="stem"
+
+# Read persona from state file if it exists
+if [[ -f "$STATE_FILE" ]]; then
+    # Extract persona for this folder using python (avoid jq dependency)
+    PERSONA=$(python3 -c "
+import json, sys, os
+try:
+    with open('$STATE_FILE') as f:
+        data = json.load(f)
+    folders = data.get('folders', {})
+    persona = folders.get('$WORK_DIR', {}).get('persona')
+    if not persona:
+        # Try to auto-detect
+        if os.path.exists('$WORK_DIR/package.json'):
+            persona = 'tars'
+        elif os.path.isdir('$WORK_DIR/ProjectSettings') or \
+             any(f.endswith('.unity') for f in os.listdir('$WORK_DIR') if os.path.isfile('$WORK_DIR/' + f)) or \
+             any(f.endswith('.csproj') for f in os.listdir('$WORK_DIR') if os.path.isfile('$WORK_DIR/' + f)):
+            persona = 'red-queen'
+        else:
+            persona = data.get('default', 'stem')
+    print(persona)
+except Exception as e:
+    print('stem')
+" 2>/dev/null || echo "stem")
+fi
+
+# Build persona prompt path
+PERSONA_FILE="${SKILLS_DIR}/persona-${PERSONA}.md"
+
+# Check if user already specified a system prompt
+USER_HAS_PROMPT=false
+for arg in "$@"; do
+    if [[ "$arg" == "--append-system-prompt" ]] || [[ "$arg" == "--system-prompt" ]]; then
+        USER_HAS_PROMPT=true
+        break
+    fi
+done
+
+# Execute with or without persona injection
+if [[ "$USER_HAS_PROMPT" == "true" ]] || [[ ! -f "$PERSONA_FILE" ]]; then
+    exec "$@"
+else
+    PERSONA_CONTENT=$(cat "$PERSONA_FILE")
+    exec "${@}" --append-system-prompt "$PERSONA_CONTENT"
+fi

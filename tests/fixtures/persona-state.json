@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "default": "stem",
+  "folders": {
+    "/test/js-project": {
+      "persona": "tars",
+      "lastUsed": "2024-01-01T00:00:00.000Z"
+    },
+    "/test/unity-project": {
+      "persona": "red-queen",
+      "lastUsed": "2024-01-02T00:00:00.000Z"
+    }
+  }
+}
