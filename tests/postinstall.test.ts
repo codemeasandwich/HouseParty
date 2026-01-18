@@ -170,18 +170,19 @@ describe('Postinstall Script', () => {
       expect(existsSync(skillsDir)).toBe(true);
     });
 
-    test('copies persona files from PUT_YOUR_MDs_HERE/', () => {
-      const skillsDir = join(sharedCtx.homeDir, '.claude', 'skills');
-      expect(existsSync(join(skillsDir, 'persona-tars.md'))).toBe(true);
-      expect(existsSync(join(skillsDir, 'persona-red-queen.md'))).toBe(true);
-      expect(existsSync(join(skillsDir, 'persona-stem.md'))).toBe(true);
+    test('copies persona files to ~/.claude/personas/', () => {
+      const personasDir = join(sharedCtx.homeDir, '.claude', 'personas');
+      expect(existsSync(personasDir)).toBe(true);
+      expect(existsSync(join(personasDir, 'persona-tars.md'))).toBe(true);
+      expect(existsSync(join(personasDir, 'persona-red-queen.md'))).toBe(true);
+      expect(existsSync(join(personasDir, 'persona-stem.md'))).toBe(true);
     });
 
-    test('copies workflow skill files', () => {
+    test('copies workflow skill files with flattened prefix', () => {
       const skillsDir = join(sharedCtx.homeDir, '.claude', 'skills');
-      expect(existsSync(join(skillsDir, 'workflow-planning.md'))).toBe(true);
-      expect(existsSync(join(skillsDir, 'workflow-design.md'))).toBe(true);
-      expect(existsSync(join(skillsDir, 'workflow-implementation.md'))).toBe(true);
+      expect(existsSync(join(skillsDir, 'workflow_1-capture.md'))).toBe(true);
+      expect(existsSync(join(skillsDir, 'workflow_2-requirements.md'))).toBe(true);
+      expect(existsSync(join(skillsDir, 'workflow_6-completion.md'))).toBe(true);
     });
   });
 
